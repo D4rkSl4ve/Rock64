@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# Variables
+logDate='\n'`date`'\n----------------------------------------------------\n'
+logLoc='/var/log/rock64-torbox_install.log'
+
+do_log() {
+  if ([ -n $package ] && [ $package != update ] && [ $package != upgrade ] &| [ -z $serviceCtr ] &| [ -z $serviceStr ]); then
+    logApt="[ PROGRAM ] Downloading and installing:  $package"
+    scrApt="echo -e \e[0;93m> [ \e[0;96mPROGRAM \e[0;93m] Downloading and installing:\e[0;92m  $package\e[0m"
+    $scrApt && echo -e $logDate$logApt >> $logLoc
+    package=''
+  elif [ $package == update ]; then
+    logApt="[ UPDATE ] Updating package(s) and apt repositories..."
+    scrApt="echo -e \e[0;93m> [ \e[0;96mUPDATE \e[0;93m] Updating package(s) and apt repositories...\e[0m"
+    $scrApt && echo -e $logDate$logApt >> $logLoc
+  elif [ $package == upgrade ]; then
+    logApt="[ UPGRADE ] Upgrading package(s) and apt repositories..."
+    scrApt="echo -e \e[0;93m> [ \e[0;96mUPGRADE \e[0;93m] Updgrading package(s) and apt repositories...\e[0m"
+    $scrApt && echo -e $logDate$logApt >> $logLoc
+
+  elif [ -n $serviceCrt ]; then
+    logApt="[ SERVICE ] Creating service for:  $serviceCrt"
+    scrApt="echo -e \e[0;93m> [ \e[0;96mSERVICE \e[0;93m] Creating service:\e[0;92m  $serviceCrt\e[0m"
+
+
+#       $scrScr
+# && serviceCtr=''
+    $scrApt && echo -e $logDate $logApt >> $logLoc
+    serviceCrt=''
+    return
+   elif [ -n $serviceStr ]; then
+     logApt="[ SERVICE ] Starting service:  $serviceStr"
+     scrApt="echo -e \e[0;93m> [ \e[0;96mSERVICE \e[0;93m] Starting service:\e[0;92m  $serviceStr\e[0m"
+ #       $scrScr
+ # && serviceStr=''
+     $scrApt && echo -e $logDate $logApt >> $logLoc
+     serviceStr=''
+     return
+
+   fi
+ }
+
+ package="git"
+ do_log
+ #sudo apt-get install git git-core -y >> $logLoc
+
+ serviceCrt="Deluge+Deluge-WEB2"
+ do_log
+ #sudo apt-get upgrade -y >> $logLoc 2>&1
+
+ package="upgrade"
+ do_log
+ #sudo apt-get upgrade -y >> $logLoc 2>&1
+
+ package="MidnightCommander"
+ do_log
+ #sudo apt-get install mc -y >> $logLoc
+
+ package="update"
+ do_log
+ #sudo apt-get update >> $logLoc
+
+ package="upgrade"
+ do_log
+ #sudo apt-get upgrade -y >> $logLoc 2>&1
+
+ #serviceStr="Deluge+Deluge-WEB"
+ #do_log
+ #sudo apt-get upgrade -y >> $logLoc 2>&1
