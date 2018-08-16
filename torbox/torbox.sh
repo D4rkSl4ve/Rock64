@@ -151,6 +151,7 @@ do_upgrade() {
   return 0
 }
 
+# Directories for the torrent box use under /home/dietpi
 do_torbox_directories() {
   logTxt="[ FOLDER ] Creating folder(s) for Downloads, Music, Videos, Temp"
   logScr="echo -e \e[0;93m> [ \e[0;96mFOLDER \e[0;93m] Creating folder(s) for\e[0;92m Downloads, Music, Videos, Temp\e[0m"
@@ -161,6 +162,7 @@ do_torbox_directories() {
   install -d -m 0755 -o dietpi -g dietpi /home/dietpi/Temp
 }
 
+# Programs and packages required for the torrent box programs to work
 do_torbox_requirement_packages() {
   logTxt="[ REQUIREMENT(S) ] Download and installation of required packages, create folders, and install log file"
   logScr="echo -e \e[0;93m> [ \e[0;96mREQUIREMENT(S) \e[0;93m] Download and installation of \e[0;92mrequired packages and create folders\e[0m"
@@ -206,6 +208,7 @@ do_torbox_requirement_packages() {
   ASK_TO_REBOOT=1
 }
 
+# Programs and packages need for the torrent box
 do_torbox_programs() {
   logTxt="[ PACKAGE(S) ] Download and installation of torrent box programs"
   logScr="echo -e \e[0;93m> [ \e[0;96mPACKAGE(S) \e[0;93m] Download and installation of\e[0;92m torrent box packages\e[0m"
@@ -465,6 +468,7 @@ EOF
   ASK_TO_REBOOT=1
 }
 
+# Maintenance programs and packages used for the torrent box
 do_torbox_maintenance_programs() {
   logTxt="[ PACKAGE(S) ] Download and Installation of maintenance utility programs"
   logScr="echo -e \e[0;93m> [ \e[0;96mPACKAGE(S) \e[0;93m] Download and Installation of:\e[0;92m maintenance utility programs\e[0m"
@@ -490,6 +494,7 @@ do_torbox_maintenance_programs() {
 
 }
 
+# Preassigned settings to ease the installation of the above programs and packages
 do_torbox_preassigned_settings() {
   if (whiptail --title "Criteria to use preassigned settings" --yesno --defaultno "
     • Rebooted after running the 'First Time Boot'
@@ -607,8 +612,43 @@ do_torbox_preassigned_settings() {
   do_reboot_reminder
 }
 
+# Future settings spot on the menu
 do_future_settings() {
   if [ "$INTERACTIVE" = True ]; then
-    whiptail --msgbox "This portion of the the script is not finished yet.\n" 20 60 2
+    whiptail --msgbox "This portion of the the script is for future use.\n" 20 60 2
   fi
+}
+
+# Main Menu for torrent box installation and settings
+if [ "$INTERACTIVE" = True ]; then
+  while true; do
+    FUN=$(whiptail --title "Rock64 Torrent Box Configuration Menu (rock64-torbox)" --backtitle "$(cat /proc/device-tree/model)" --menu "Rock64 Torrent Box Options" 15 85 7 --cancel-button Finish --ok-button Select \
+      "1 Requirement Packages" "Installation of required packages, and  log" \
+      "2 TorBox Programs" "Installation of torrent box programs and services" \
+      "3 Maintenance Utilities" "Installation of maintenance utilities" \
+      "4 Preassigned Settings" "Installation of 'Programs' preassigned settings" \
+      "7 Update\Upgrade" "Repository Update and Upgade" \
+      "8 Reboot Rock64" "Reboot Rock64 to take effect" \
+      "9 DietPie Launcher" "DietPi Launcher Menu" \
+      3>&1 1>&2 2>&3)
+    RET=$?
+    if [ $RET -eq 1 ]; then
+      do_finish
+    elif [ $RET -eq 0 ]; then
+      case "$FUN" in
+        1\ *) echo -e '\nRequirement Packages activate\n'$logDate >> $logLoc && do_torbox_requirement_packages ;;
+        2\ *) echo -e '\nTorBox Programs activate\n'$logDate >> $logLoc && do_torbox_directories && do_torbox_programs ;;
+        3\ *) echo -e '\nMaintenance Utilities activate\n'$logDate >> $logLoc && do_torbox_maintenance_programs ;;
+        4\ *) echo -e '\nPreassigned Settings activate\n'$logDate >> $logLoc && do_torbox_preassigned_settings ;;
+        7\ *) echo -e '\nUpdate\Update/Upgrade activate\n'$logDate >> $logLoc && do_update && do_upgrade ;;
+        8\ *) echo -e '\nReboot Rock64 activate\n'$logDate >> $logLoc && do_reboot ;;
+        9\ *) echo -e '\nDietPi Laucnher Menu activate\n'$logDate >> $logLoc && do_raspi_config_menu ;;
+        *) whiptail --msgbox "Programmer error: unrecognized option" 30 60 1 ;;
+      esac || whiptail --msgbox "There was an error running option $FUN" 30 60 1
+    else
+      do_exit
+    fi
+  done
+fi
+do_exit
 }
