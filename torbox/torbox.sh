@@ -53,6 +53,9 @@ do_log() {
     #sudo systemctl start <serviceName.service>
     #sudo systemctl stop <serviceName.service>
     #sudo systemctl status <serviceName.service> >> $logLoc
+  # Unknown log needed
+    #logApt="[ SAMPLE ] Situation or comment to be logged"
+    #do_log
 
   if ([ -n "$package" ] && ! [ "$package" == "update" ] && ! [ "$package" == "upgrade" ]); then
     logApt="[ PROGRAM ] Downloading and installing: $package"
@@ -85,10 +88,9 @@ do_log() {
     serviceS=''
     return
   fi
-  logApt="[ UNKNOWN ] Unknown situation to be logged."
-  scrApt="echo -e \e[0;93m> [ \e[0;96mUNKNOWN \e[0;93m] Unknown situation to be logged\e[0m"
+  scrApt="echo -e \e[0;93m> [ \e[0;96mUNKNOWN \e[0;93m] Unknown situation to be logged; check log file for details.\e[0m"
   $scrApt && echo -e $logDate$logApt >> $logLoc
-  package='' && serviceC='' && serviceS=''
+  logApt=''
 }
 
 # Reminder to reboot if required
