@@ -12,16 +12,10 @@
 #
 #
 
-# Variables for functions
-  ASK_TO_REBOOT=0
-  logDate=`date`'\n----------------------------\n'
-  logTxt='/var/log/rock64-torbox_install.log'
-
-  #  Exmples for Log File
-  #  echo -e $logDate "Comment on Screen \n" >> $logTxt OR >> $logTxt 2>&1
-  #  echo -e "\e[0;96m> Comment on\e[0;92mScreen \e[0m"
-  #  sudo touch $logTxt
-  #  sudo apt-get update >> $logTxt 2>&1
+# Set Variables for functions
+ASK_TO_REBOOT=0 #Keep track if reboot is required by a function
+logDate=`date`'\n----------------------------\n' #Print Date/Time/horizontal line
+logTxt='/var/log/rock64-torbox_install.log' #logfile location and filename.log
 
 # Create TorBox install log file
 if [ ! -f $logTxt ]; then
@@ -30,6 +24,69 @@ if [ ! -f $logTxt ]; then
   sudo chown dietpi:dietpi $logTxt
   echo -e $logDate "Creating install log file at $logTxt\n" >> $logTxt
 fi
+
+# Log file functions for package (programs), service, update and upgrade
+do_log() {
+  # Examples for Log File
+  # Typical command: sudo apt-get update
+    #package="update"
+    #do_log
+    #do_update >> $logLoc 2>&1
+  # Typical command: sudo apt-get upgrade -y
+    #package="upgrade"
+    #do_log
+    #do_upgrade >> $logLoc 2>&1
+  # Typical command: sudo apt-get install <package> -y
+    #package="Package/Program Name"
+    #do_log
+    #sudo apt-get install <programName> -y >> $logLoc 2>&1
+  # Typical command: cat > serviceName.service << EOF, cont'd
+    #serviceC="<Service Name>"
+    #do_log
+    #cat > <serviceName>.service << EOF
+    #...
+    #EOF
+  # Typical command:  sydo systemctl start <serviceName>
+    #serviceS="<Service Name>"
+    #do_log
+    #sudo systemctl enable <serviceName.service>  >> $logTxt 2>&1
+    #sudo systemctl start <serviceName.service>
+    #sudo systemctl stop <serviceName.service>
+    #sudo systemctl status <serviceName.service> >> $logLoc
+
+  if ([ -n "$package" ] && ! [ "$package" == "update" ] && ! [ "$package" == "upgrade" ]); then
+    logApt="[ PROGRAM ] Downloading and installing: $package"
+    scrApt="echo -e \e[0;93m> [ \e[0;96mPROGRAM \e[0;93m] Downloading and installing:\e[0;92m $package\e[0m"
+    $scrApt && echo -e $logDate$logApt >> $logLoc
+    package=''
+    return
+  elif [ "$package" == "update" ]; then
+    logApt="[ UPDATE ] Updating package(s) and apt repositories..."
+    scrApt="echo -e \e[0;93m> [ \e[0;96mUPDATE \e[0;93m] Updating package(s) and apt repositories...\e[0m"
+    $scrApt && echo -e $logDate$logApt >> $logLoc
+    package=''
+    return
+  elif [ "$package" == "upgrade" ]; then
+    logApt="[ UPGRADE ] Upgrading package(s) and apt repositories..."
+    scrApt="echo -e \e[0;93m> [ \e[0;96mUPGRADE \e[0;93m] Updgrading package(s) and apt repositories...\e[0m"
+    $scrApt && echo -e $logDate$logApt >> $logLoc
+    package=''
+    return
+  elif [ -n "$serviceC" ]; then
+    logApt="[ SERVICE ] Creating service for: $serviceC"
+    scrApt="echo -e \e[0;93m> [ \e[0;96mSERVICE \e[0;93m] Creating service:\e[0;92m $serviceC\e[0m"
+    $scrApt && echo -e $logDate$logApt >> $logLoc
+    serviceC=''
+    return
+  elif [ -n "$serviceS" ]; then
+    logApt="[ SERVICE ] Starting service: $serviceS"
+    scrApt="echo -e \e[0;93m> [ \e[0;96mSERVICE \e[0;93m] Starting service:\e[0;92m $serviceS\e[0m"
+    $scrApt && echo -e $logDate$logApt >> $logLoc
+    serviceS=''
+    return
+  fi
+  package='' && serviceC='' && serviceS=''
+}
 
 # Reminder to reboot if required
 do_reboot_reminder() {
