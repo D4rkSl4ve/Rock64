@@ -85,6 +85,9 @@ do_log() {
     serviceS=''
     return
   fi
+  logApt="[ UNKNOWN ] Unknown situation to be logged."
+  scrApt="echo -e \e[0;93m> [ \e[0;96mUNKNOWN \e[0;93m] Unknown situation to be logged\e[0m"
+  $scrApt && echo -e $logDate$logApt >> $logLoc
   package='' && serviceC='' && serviceS=''
 }
 
@@ -122,23 +125,22 @@ do_exit() {
 
 # APT-GET UPDATE command
 do_update() {
-  echo -e $logDate "Updating package(s) and apt repositories... \n" >> $logTxt
-  echo -e "\e[0;96m\n> Updating package(s) and apt repositories... \e[0m\n"
+  #echo -e $logDate "Updating package(s) and apt repositories... \n" >> $logTxt
+  #echo -e "\e[0;96m\n> Updating package(s) and apt repositories... \e[0m\n"
+  package="update" && do_log
   sudo apt-get update >> $logTxt 2>&1
   return 0
 }
 
 # APT-GET UPGRADE command
 do_upgrade() {
-  echo -e $logDate "Upgrading package(s) and application(s)... \n" >> $logTxt
-  echo -e "\e[0;96m\n> Upgrading package(s) and application(s)... \e[0m\n"
+  #echo -e $logDate "Upgrading package(s) and application(s)... \n" >> $logTxt
+  #echo -e "\e[0;96m\n> Upgrading package(s) and application(s)... \e[0m\n"
+  package="upgrade"
+  do_log
   sudo apt-get upgrade -y >> $logTxt 2>&1
   return 0
 }
-
-
-# CHECK FROM HERE DOWN
-
 
 do_torbox_directories() {
   echo -e $logDate "Creating directoies for Downloads, Music, Videos, Temp \n" >> $logTxt &&
@@ -148,6 +150,9 @@ do_torbox_directories() {
   install -d -m 0755 -o dietpi -g dietpi /home/dietpi/Videos
   install -d -m 0755 -o dietpi -g dietpi /home/dietpi/Temp
 }
+
+# CHECK FROM HERE DOWN
+
 
 do_torbox_requirement_packages() {
   echo -e $logDate "Download and installation of required packages, create folders, and install log file \n" >> $logTxt &&
