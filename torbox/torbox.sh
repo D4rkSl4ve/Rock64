@@ -622,7 +622,7 @@ do_future_settings() {
 # Main Menu for torrent box installation and settings
 if [ "$INTERACTIVE" = True ]; then
   while true; do
-    FUN=$(whiptail --title "Rock64 Torrent Box Configuration Menu (rock64-torbox)" --backtitle "$(cat /proc/device-tree/model)" --menu "Rock64 Torrent Box Options" 15 85 7 --cancel-button Finish --ok-button Select \
+    menuOption=$(whiptail --title "Rock64 Torrent Box Configuration Menu (rock64-torbox)" --backtitle "$(cat /proc/device-tree/model)" --menu "Rock64 Torrent Box Options" 15 85 7 --cancel-button Finish --ok-button Select \
       "1 Requirement Packages" "Installation of required packages, and  log" \
       "2 TorBox Programs" "Installation of torrent box programs and services" \
       "3 Maintenance Utilities" "Installation of maintenance utilities" \
@@ -633,9 +633,9 @@ if [ "$INTERACTIVE" = True ]; then
       3>&1 1>&2 2>&3)
     RET=$?
     if [ $RET -eq 1 ]; then
-      do_finish
+      do_exit
     elif [ $RET -eq 0 ]; then
-      case "$FUN" in
+      case "$menuOption" in
         1\ *) echo -e '\nRequirement Packages activate\n'$logDate >> $logLoc && do_torbox_requirement_packages ;;
         2\ *) echo -e '\nTorBox Programs activate\n'$logDate >> $logLoc && do_torbox_directories && do_torbox_programs ;;
         3\ *) echo -e '\nMaintenance Utilities activate\n'$logDate >> $logLoc && do_torbox_maintenance_programs ;;
@@ -644,9 +644,9 @@ if [ "$INTERACTIVE" = True ]; then
         8\ *) echo -e '\nReboot Rock64 activate\n'$logDate >> $logLoc && do_reboot ;;
         9\ *) echo -e '\nDietPi Laucnher Menu activate\n'$logDate >> $logLoc && do_raspi_config_menu ;;
         *) whiptail --msgbox "Programmer error: unrecognized option" 30 60 1 ;;
-      esac || whiptail --msgbox "There was an error running option $FUN" 30 60 1
+      esac || whiptail --msgbox "There was an error running option $menuOption" 30 60 1
     else
-      do_exit
+      do_reboot_reminder
     fi
   done
 fi
