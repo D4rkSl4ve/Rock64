@@ -32,15 +32,15 @@ do_log() {
   # Typical command: sudo apt-get update
     #package="update"
     #do_log
-    #do_update >> $logLoc 2>&1
+    #do_update >> $logFile 2>&1
   # Typical command: sudo apt-get upgrade -y
     #package="upgrade"
     #do_log
-    #do_upgrade >> $logLoc 2>&1
+    #do_upgrade >> $logFile 2>&1
   # Typical command: sudo apt-get install <package> -y
     #package="Package/Program Name"
     #do_log
-    #sudo apt-get install <programName> -y >> $logLoc 2>&1
+    #sudo apt-get install <programName> -y >> $logFile 2>&1
   # Typical command: cat > serviceName.service << EOF, cont'd
     #serviceC="<Service Name>"
     #do_log
@@ -53,7 +53,7 @@ do_log() {
     #sudo systemctl enable <serviceName.service>  >> $logFile 2>&1
     #sudo systemctl start <serviceName.service>
     #sudo systemctl stop <serviceName.service>
-    #sudo systemctl status <serviceName.service> >> $logLoc
+    #sudo systemctl status <serviceName.service> >> $logFile
   # Unknown log needed
     #logTxt="[ SAMPLE ] Situation or comment to be logged"
     #logScr="echo -e \e[0;93m> [ \e[0;96mSAMPLE \e[0;93m] Situation or comment to be\e[0;92m logged.\e[0m"
@@ -62,41 +62,41 @@ do_log() {
   if ([ -n "$package" ] && ! [ "$package" == "update" ] && ! [ "$package" == "upgrade" ]); then
     logTxt="[ PACKAGE ] Downloading and installing: $package"
     logScr="echo -e \e[0;93m> [ \e[0;96mPACKAGE \e[0;93m] Downloading and installing:\e[0;92m $package\e[0m"
-    $logScr && echo -e $logDate$logTxt >> $logLoc
+    $logScr && echo -e $logDate$logTxt >> $logFile
     package=''
     return
   elif [ "$package" == "update" ]; then
     logTxt="[ UPDATE ] Updating package(s) and apt repositories..."
     logScr="echo -e \e[0;93m> [ \e[0;96mUPDATE \e[0;93m] Updating package(s) and apt repositories...\e[0m"
-    $logScr && echo -e $logDate$logTxt >> $logLoc
+    $logScr && echo -e $logDate$logTxt >> $logFile
     package=''
     return
   elif [ "$package" == "upgrade" ]; then
     logTxt="[ UPGRADE ] Upgrading package(s) and apt repositories..."
     logScr="echo -e \e[0;93m> [ \e[0;96mUPGRADE \e[0;93m] Updgrading package(s) and apt repositories...\e[0m"
-    $logScr && echo -e $logDate$logTxt >> $logLoc
+    $logScr && echo -e $logDate$logTxt >> $logFile
     package=''
     return
   elif [ -n "$settings" ]; then
     logTxt="[ SETTINGS ] Preassigned settings and files for: $settings"
     logScr="echo -e \e[0;93m> [ \e[0;96mSETTINGS \e[0;93m] Preassigned settings and files for:\e[0;92m $settings\e[0m"
-    $logScr && echo -e $logDate$logTxt >> $logLoc
+    $logScr && echo -e $logDate$logTxt >> $logFile
     settings=''
     return
   elif [ -n "$serviceC" ]; then
     logTxt="[ SERVICE ] Creating service for: $serviceC"
     logScr="echo -e \e[0;93m> [ \e[0;96mSERVICE \e[0;93m] Creating service:\e[0;92m $serviceC\e[0m"
-    $logScr && echo -e $logDate$logTxt >> $logLoc
+    $logScr && echo -e $logDate$logTxt >> $logFile
     serviceC=''
     return
   elif [ -n "$serviceS" ]; then
     logTxt="[ SERVICE ] Starting service: $serviceS"
     logScr="echo -e \e[0;93m> [ \e[0;96mSERVICE \e[0;93m] Starting service:\e[0;92m $serviceS\e[0m"
-    $logScr && echo -e $logDate$logTxt >> $logLoc
+    $logScr && echo -e $logDate$logTxt >> $logFile
     serviceS=''
     return
   fi
-  $logScr && echo -e $logDate$logTxt >> $logLoc
+  $logScr && echo -e $logDate$logTxt >> $logFile
   logTxt='' && logScr=''
 }
 
@@ -645,13 +645,13 @@ if [ "$INTERACTIVE" = True ]; then
       do_exit
     elif [ $RET -eq 0 ]; then
       case "$menuOption" in
-        1\ *) echo -e '\nRequirement Packages activate\n'$logDate >> $logLoc && do_torbox_requirement_packages ;;
-        2\ *) echo -e '\nTorBox Programs activate\n'$logDate >> $logLoc && do_torbox_directories && do_torbox_programs ;;
-        3\ *) echo -e '\nMaintenance Utilities activate\n'$logDate >> $logLoc && do_torbox_maintenance_programs ;;
-        4\ *) echo -e '\nPreassigned Settings activate\n'$logDate >> $logLoc && do_torbox_preassigned_settings ;;
-        7\ *) echo -e '\nUpdate\Update/Upgrade activate\n'$logDate >> $logLoc && do_update && do_upgrade ;;
-        8\ *) echo -e '\nReboot Rock64 activate\n'$logDate >> $logLoc && do_reboot ;;
-        9\ *) echo -e '\nDietPi Launcher Menu activate\n'$logDate >> $logLoc && do_dietpi_launcher ;;
+        1\ *) echo -e '\nRequirement Packages activate\n'$logDate >> $logFile && do_torbox_requirement_packages ;;
+        2\ *) echo -e '\nTorBox Programs activate\n'$logDate >> $logFile && do_torbox_directories && do_torbox_programs ;;
+        3\ *) echo -e '\nMaintenance Utilities activate\n'$logDate >> $logFile && do_torbox_maintenance_programs ;;
+        4\ *) echo -e '\nPreassigned Settings activate\n'$logDate >> $logFile && do_torbox_preassigned_settings ;;
+        7\ *) echo -e '\nUpdate\Update/Upgrade activate\n'$logDate >> $logFile && do_update && do_upgrade ;;
+        8\ *) echo -e '\nReboot Rock64 activate\n'$logDate >> $logFile && do_reboot ;;
+        9\ *) echo -e '\nDietPi Launcher Menu activate\n'$logDate >> $logFile && do_dietpi_launcher ;;
         *) whiptail --msgbox "Programmer error: unrecognized option" 30 60 1 ;;
       esac || whiptail --msgbox "There was an error running option $menuOption" 30 60 1
     else
