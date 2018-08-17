@@ -514,8 +514,8 @@ do_torbox_preassigned_settings() {
                       Has the following criteria been met?
       " 20 85) then
 
-    logTxt="[ SETTINGS ] Editing, Download, Replacing, and Installation of preassgined settings"
-    logScr="echo -e \e[0;93m> [ \e[0;96mSETTINGS \e[0;93m] Editing, Download, Replacing, and Installation of\e[0;92m preassgined settings\e[0m"
+    logTxt="[ MENU ] Editing, Download, Replacing, and Installation of preassgined settings"
+    logScr="echo -e \e[0;93m> [ \e[0;96mMENU \e[0;93m] Editing, Download, Replacing, and Installation of\e[0;92m preassgined settings\e[0m"
     do_log
 
     # Deluge
