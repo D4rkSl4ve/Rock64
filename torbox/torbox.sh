@@ -170,7 +170,6 @@ do_torbox_requirement_packages() {
   logTxt="[ REQUEST ] Requesting package key: mono-project/repo"
   logScr="echo -e \e[0;93m> [ \e[0;96mREQUEST \e[0;93m] Requesting package key:\e[0;92m mono-project/repo\e[0m"
   do_log
-  sudo apt update
   sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF >> $logFile 2>&1 &&
   echo "deb https://download.mono-project.com/repo/debian stable-stretch main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list >> $logFile 2>&1 &&
   do_update
@@ -190,8 +189,6 @@ do_torbox_requirement_packages() {
   do_log
   sudo apt-get install mediainfo -y >> $logFile 2>&1 &&
   do_upgrade
-  # echo -e "\e[0;96m> Package(s) Update/Upgrade Required \e[0m" &&
-  # sudo apt-get upgrade -y >> $logFile 2>&1 &&
 
   ASK_TO_REBOOT=1
 }
