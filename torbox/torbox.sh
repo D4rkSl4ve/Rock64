@@ -620,6 +620,13 @@ do_future_settings() {
   fi
 }
 
+do_dietpi_launcher() {
+  package="DietPi Launcher"
+  do_log
+  sudo dietpi-launcher >> 2>&1
+}
+
+
 # Main Menu for torrent box installation and settings
 if [ "$INTERACTIVE" = True ]; then
   while true; do
@@ -643,7 +650,7 @@ if [ "$INTERACTIVE" = True ]; then
         4\ *) echo -e '\nPreassigned Settings activate\n'$logDate >> $logLoc && do_torbox_preassigned_settings ;;
         7\ *) echo -e '\nUpdate\Update/Upgrade activate\n'$logDate >> $logLoc && do_update && do_upgrade ;;
         8\ *) echo -e '\nReboot Rock64 activate\n'$logDate >> $logLoc && do_reboot ;;
-        9\ *) echo -e '\nDietPi Laucnher Menu activate\n'$logDate >> $logLoc && do_raspi_config_menu ;;
+        9\ *) echo -e '\nDietPi Launcher Menu activate\n'$logDate >> $logLoc && do_dietpi_launcher ;;
         *) whiptail --msgbox "Programmer error: unrecognized option" 30 60 1 ;;
       esac || whiptail --msgbox "There was an error running option $menuOption" 30 60 1
     else
