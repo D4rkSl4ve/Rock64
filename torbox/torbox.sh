@@ -621,10 +621,10 @@ do_future_settings() {
 }
 
 do_dietpi_launcher() {
-  logTxt="[ DIETPI ] Loading dietPi Launcher"
-  logScr="echo -e \e[0;93m> [ \e[0;96mDIETPI \e[0;93m] Loading\e[0;92m dietPi Launcher\e[0m"
+  logTxt="[ DIETPI ] Loading DietPi Launcher"
+  logScr="echo -e \e[0;93m> [ \e[0;96mDIETPI \e[0;93m] Loading\e[0;92m DietPi Launcher\e[0m"
   do_log
-  sudo dietpi-launcher >> logFile 2>&1
+  sudo dietpi-launcher >> $logFile 2>&1
 }
 
 
