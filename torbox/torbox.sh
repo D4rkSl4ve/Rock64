@@ -1,7 +1,7 @@
 #!bin/bash
 
 # Created: 8/14/2018
-# Revised:  8/14/2018
+# Revised:  8/16/2018
 #
 # Applications to install and setup
 #
@@ -13,6 +13,7 @@
 #
 
 # Set Variables for functions
+INTERACTIVE=True #Used for whiptail menu
 ASK_TO_REBOOT=0 #Keep track if reboot is required by a function
 logDate=`date`'\n----------------------------\n' #Print Date/Time/horizontal line
 logFile='/var/log/rock64-torbox_install.log' #logfile location and filename.log
@@ -620,7 +621,7 @@ do_future_settings() {
 }
 
 # Main Menu for torrent box installation and settings
-if [ "$INTERACTIVE" = True ]; then
+#if [ "$INTERACTIVE" = True ]; then
   while true; do
     menuOption=$(whiptail --title "Rock64 Torrent Box Configuration Menu (rock64-torbox)" --backtitle "$(cat /proc/device-tree/model)" --menu "Rock64 Torrent Box Options" 15 85 7 --cancel-button Finish --ok-button Select \
       "1 Requirement Packages" "Installation of required packages, and  log" \
