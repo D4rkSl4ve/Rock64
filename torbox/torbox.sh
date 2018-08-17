@@ -170,11 +170,10 @@ do_torbox_requirement_packages() {
   logTxt="[ REQUEST ] Requesting package key: mono-project/repo"
   logScr="echo -e \e[0;93m> [ \e[0;96mREQUEST \e[0;93m] Requesting package key:\e[0;92m mono-project/repo\e[0m"
   do_log
+  sudo apt update
   sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF >> $logFile 2>&1 &&
-  echo "deb https://download.mono-project.com/repo/debian stable-raspbianstretch main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list >> $logFile 2>&1 &&
+  echo "deb https://download.mono-project.com/repo/debian stable-stretch main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list >> $logFile 2>&1 &&
   do_update
-  # echo -e "\e[0;96m> Package(s) Update Required \e[0m" &&
-  # sudo apt-get update -y >> $logFile 2>&1 &&
 
   # mono
   package="mono-devel"
@@ -199,8 +198,8 @@ do_torbox_requirement_packages() {
 
 # Programs and packages need for the torrent box
 do_torbox_programs() {
-  logTxt="[ MENU ] Download and installation of torrent box programs"
-  logScr="echo -e \e[0;93m> [ \e[0;96mMENU \e[0;93m] Download and installation of\e[0;92m torrent box packages\e[0m"
+  logTxt="[ MENU ] Download and installation of Torrent Box Programs"
+  logScr="echo -e \e[0;93m> [ \e[0;96mMENU \e[0;93m] Download and installation of\e[0;92m Torrent Box Packages\e[0m"
   do_log
   cd /home/dietpi
 
@@ -216,9 +215,12 @@ do_torbox_programs() {
   sudo touch /var/log/deluged.log &&
   sudo touch /var/log/deluge-web.log &&
   sudo chown dietpi:dietpi /var/log/deluge* &&
-  sudo apt-get install deluged -y >> $logFile 2>&1 &&
-  sudo apt-get install deluge-webui -y >> $logFile 2>&1 &&
-  sudo apt-get install deluge-console -y >> $logFile 2>&1 &&
+  #sudo
+  apt-get install deluged -y >> $logFile 2>&1 &&
+  #sudo
+  apt-get install deluge-webui -y >> $logFile 2>&1 &&
+  #sudo
+  apt-get install deluge-console -y >> $logFile 2>&1 &&
 
   # Deluge:  service
   serviceC="Deluge"
@@ -279,8 +281,10 @@ EOF
   do_log
   cd /home/dietpi/Downloads
   wget https://github.com/Jackett/Jackett/releases/download/v0.9.41/Jackett.Binaries.Mono.tar.gz >> $logFile 2>&1 &&
-  sudo tar -zxf Jackett.Binaries.Mono.tar.gz --directory /opt/ >> $logFile 2>&1 &&
-  sudo chown -Rh dietpi:dietpi /opt/Jackett &&
+  #sudo
+  tar -zxf Jackett.Binaries.Mono.tar.gz --directory /opt/ >> $logFile 2>&1 &&
+  #sudo
+  chown -Rh dietpi:dietpi /opt/Jackett &&
 
   # Jackett:  service
   serviceC="Jackett"
@@ -325,8 +329,10 @@ EOF
   # sudo apt-get update -y >> $logFile 2>&1 &&
   package="Sonarr"
   do_log
-  sudo apt-get install nzbdrone -y >> $logFile 2>&1 &&
-  sudo chown -Rh dietpi:dietpi /opt/NzbDrone &&
+  #sudo
+  apt-get install nzbdrone -y >> $logFile 2>&1 &&
+  #sudo
+  chown -Rh dietpi:dietpi /opt/NzbDrone &&
 
   # Sonarr:  sevice
   serviceC="Sonarr"
@@ -361,9 +367,12 @@ EOF
   package="Radarr"
   do_log
   cd /home/dietpi/Downloads
-  sudo curl -L -O $( curl -s https://api.github.com/repos/Radarr/Radarr/releases | grep linux.tar.gz | grep browser_download_url | head -1 | cut -d \" -f 4 ) >> $logFile 2>&1 &&
-  sudo tar -xzf Radarr.develop.*.linux.tar.gz --directory /opt/ >> $logFile 2>&1 &&
-  sudo chown -Rh dietpi:dietpi /opt/Radarr &&
+  #sudo
+  curl -L -O $( curl -s https://api.github.com/repos/Radarr/Radarr/releases | grep linux.tar.gz | grep browser_download_url | head -1 | cut -d \" -f 4 ) >> $logFile 2>&1 &&
+  #sudo
+  tar -xzf Radarr.develop.*.linux.tar.gz --directory /opt/ >> $logFile 2>&1 &&
+  #sudo
+  chown -Rh dietpi:dietpi /opt/Radarr &&
 
   # Radarr:  service
   serviceC="Radarr"
@@ -397,9 +406,12 @@ EOF
   package="Lidarr"
   do_log
   cd /home/dietpi/Downloads
-  sudo wget https://github.com/lidarr/Lidarr/releases/download/v0.3.1.471/Lidarr.develop.0.3.1.471.linux.tar.gz >> $logFile 2>&1 &&
-  sudo tar -xzf Lidarr.develop.*.linux.tar.gz --directory /opt/ >> $logFile 2>&1 &&
-  sudo chown -Rh dietpi:dietpi /opt/Lidarr &&
+  #sudo
+  wget https://github.com/lidarr/Lidarr/releases/download/v0.3.1.471/Lidarr.develop.0.3.1.471.linux.tar.gz >> $logFile 2>&1 &&
+  #sudo
+  tar -xzf Lidarr.develop.*.linux.tar.gz --directory /opt/ >> $logFile 2>&1 &&
+  #sudo
+  chown -Rh dietpi:dietpi /opt/Lidarr &&
 
   # Lidarr:  service
   serviceC="Lidarr"
@@ -443,15 +455,18 @@ EOF
   do_update
   package="Ombi"
   do_log
-  sudo apt-get install ombi -y >> $logFile 2>&1 &&
+  #sudo
+  apt-get install ombi -y >> $logFile 2>&1 &&
 
   # Organizr:  program
   package="Organizr"
   do_log
   cd /home/dietpi
-  sudo git clone https://github.com/elmerfdz/OrganizrInstaller /opt/OrganizrInstaller >> $logFile 2>&1 &&
+  #sudo
+  git clone https://github.com/elmerfdz/OrganizrInstaller /opt/OrganizrInstaller >> $logFile 2>&1 &&
   cd /opt/OrganizrInstaller/ubuntu/oui >> $logFile 2>&1 &&
-  sudo bash ou_installer.sh &&
+  #sudo
+  bash ou_installer.sh &&
   cd /home/dietpi
 
   ASK_TO_REBOOT=1
