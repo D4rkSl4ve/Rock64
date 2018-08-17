@@ -621,7 +621,7 @@ do_future_settings() {
 }
 
 # Main Menu for torrent box installation and settings
-#if [ "$INTERACTIVE" = True ]; then
+if [ "$INTERACTIVE" = True ]; then
   while true; do
     menuOption=$(whiptail --title "Rock64 Torrent Box Configuration Menu (rock64-torbox)" --backtitle "$(cat /proc/device-tree/model)" --menu "Rock64 Torrent Box Options" 15 85 7 --cancel-button Finish --ok-button Select \
       "1 Requirement Packages" "Installation of required packages, and  log" \
