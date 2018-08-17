@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 # Created: 8/14/2018
 # Revised:  8/16/2018
