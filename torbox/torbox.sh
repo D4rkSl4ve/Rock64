@@ -471,8 +471,8 @@ EOF
 
 # Maintenance programs and packages used for the torrent box
 do_torbox_maintenance_programs() {
-  logTxt="[ PACKAGE(S) ] Download and Installation of maintenance utility programs"
-  logScr="echo -e \e[0;93m> [ \e[0;96mPACKAGE(S) \e[0;93m] Download and Installation of:\e[0;92m maintenance utility programs\e[0m"
+  logTxt="[ MENU ] Download and Installation of maintenance utility programs"
+  logScr="echo -e \e[0;93m> [ \e[0;96mMENU \e[0;93m] Download and Installation of:\e[0;92m maintenance utility programs\e[0m"
   do_log
 
   # Midnight Commander
