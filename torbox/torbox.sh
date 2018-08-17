@@ -109,7 +109,7 @@ do_reboot_reminder() {
     " 10 70 2
     if [ $? -eq 0 ]; then # yes
       logTxt="[ REBOOT ] Rebooting system as per reminder command"
-      logScr="echo -e \e[0;93m> [ \e[0;96mREBOOT \e[0;93m] Rebooting system as per \e[0;92mReminder \e[0mcommand"
+      logScr="echo -e \e[0;93m> [ \e[0;96mREBOOT \e[0;93m] Rebooting system as per \e[0;92mReminder command\e[0m"
       do_log
       reboot
     fi
