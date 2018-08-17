@@ -15,7 +15,7 @@
 # Set Variables for functions
 INTERACTIVE=True #Used for whiptail menu
 ASK_TO_REBOOT=0 #Keep track if reboot is required by a function
-logDate=`date`'\n----------------------------\n' #Print Date/Time/horizontal line
+logDate="\n`date`\n----------------------------\n" #Print Date/Time/horizontal line
 logFile='/var/log/rock64-torbox_install.log' #logfile location and filename.log
 
 # Create TorBox install log file
@@ -114,38 +114,26 @@ do_reboot_reminder() {
       reboot
     fi
   fi
-  return 0
+  exit
 }
 
 # Exit Command, will check if reboot is required
-do_exit() {
-  if [ $ASK_TO_REBOOT -eq 1 ]; then
-    whiptail --title "Must Reboot System" --yesno "
-    Please reboot the system for changes to take effect.\n
-    Would you like to reboot now?  Reconnect in 15 seconds.
-    " 10 60 2
-    if [ $? -eq 0 ]; then # yes
-      logTxt="[ REBOOT ] Rebooting system as per Exit command"
-      logScr="echo -e \e[0;93m[ \e[0;96mREBOOT \e[0;93m] Rebooting system as per\e[0;92mExit \e[0mcommand"
-      reboot
-    fi
-  fi
-  exit 0
+do_reboot() {
+  logTxt="[ REBOOT ] Rebooting system as per Exit command"
+  logScr="echo -e \e[0;93m[ \e[0;96mREBOOT \e[0;93m] Rebooting system as per\e[0;92mExit \e[0mcommand"
+  reboot
 }
 
 # APT-GET UPDATE command
 do_update() {
-  #echo -e $logDate "Updating package(s) and apt repositories... \n" >> $logFile
-  #echo -e "\e[0;96m\n> Updating package(s) and apt repositories... \e[0m\n"
-  package="update" && do_log
+  package="update"
+  do_log
   sudo apt-get update >> $logFile 2>&1
   return 0
 }
 
 # APT-GET UPGRADE command
 do_upgrade() {
-  #echo -e $logDate "Upgrading package(s) and application(s)... \n" >> $logFile
-  #echo -e "\e[0;96m\n> Upgrading package(s) and application(s)... \e[0m\n"
   package="upgrade"
   do_log
   sudo apt-get upgrade -y >> $logFile 2>&1
@@ -154,8 +142,8 @@ do_upgrade() {
 
 # Directories for the torrent box use under /home/dietpi
 do_torbox_directories() {
-  logTxt="[ FOLDER ] Creating folder(s) for Downloads, Music, Videos, Temp"
-  logScr="echo -e \e[0;93m> [ \e[0;96mFOLDER \e[0;93m] Creating folder(s) for\e[0;92m Downloads, Music, Videos, Temp\e[0m"
+  logTxt="[ MENU ] Creating folder(s) for Downloads, Music, Videos, Temp"
+  logScr="echo -e \e[0;93m> [ \e[0;96mMENU \e[0;93m] Creating folder(s) for\e[0;92m Downloads, Music, Videos, Temp\e[0m"
   do_log
   install -d -m 0755 -o dietpi -g dietpi /home/dietpi/Downloads
   install -d -m 0755 -o dietpi -g dietpi /home/dietpi/Music
@@ -165,8 +153,8 @@ do_torbox_directories() {
 
 # Programs and packages required for the torrent box programs to work
 do_torbox_requirement_packages() {
-  logTxt="[ REQUIREMENT(S) ] Download and installation of required packages, create folders, and install log file"
-  logScr="echo -e \e[0;93m> [ \e[0;96mREQUIREMENT(S) \e[0;93m] Download and installation of \e[0;92mrequired packages and create folders\e[0m"
+  logTxt="[ MENU ] Download and installation of required packages, create folders, and install log file"
+  logScr="echo -e \e[0;93m> [ \e[0;96mMENU \e[0;93m] Download and installation of \e[0;92mrequired packages and create folders\e[0m"
   do_log
   cd /home/dietpi
 
@@ -211,8 +199,8 @@ do_torbox_requirement_packages() {
 
 # Programs and packages need for the torrent box
 do_torbox_programs() {
-  logTxt="[ PACKAGE(S) ] Download and installation of torrent box programs"
-  logScr="echo -e \e[0;93m> [ \e[0;96mPACKAGE(S) \e[0;93m] Download and installation of\e[0;92m torrent box packages\e[0m"
+  logTxt="[ MENU ] Download and installation of torrent box programs"
+  logScr="echo -e \e[0;93m> [ \e[0;96mMENU \e[0;93m] Download and installation of\e[0;92m torrent box packages\e[0m"
   do_log
   cd /home/dietpi
 
@@ -624,9 +612,8 @@ do_dietpi_launcher() {
   logTxt="[ DIETPI ] Loading DietPi Launcher"
   logScr="echo -e \e[0;93m> [ \e[0;96mDIETPI \e[0;93m] Loading\e[0;92m DietPi Launcher\e[0m"
   do_log
-  sudo dietpi-launcher >> $logFile 2>&1
+  sudo dietpi-launcher
 }
-
 
 # Main Menu for torrent box installation and settings
 if [ "$INTERACTIVE" = True ]; then
@@ -642,16 +629,16 @@ if [ "$INTERACTIVE" = True ]; then
       3>&1 1>&2 2>&3)
     RET=$?
     if [ $RET -eq 1 ]; then
-      do_exit
+      do_reboot_reminder
     elif [ $RET -eq 0 ]; then
       case "$menuOption" in
-        1\ *) echo -e '\nRequirement Packages activate\n'$logDate >> $logFile && do_torbox_requirement_packages ;;
-        2\ *) echo -e '\nTorBox Programs activate\n'$logDate >> $logFile && do_torbox_directories && do_torbox_programs ;;
-        3\ *) echo -e '\nMaintenance Utilities activate\n'$logDate >> $logFile && do_torbox_maintenance_programs ;;
-        4\ *) echo -e '\nPreassigned Settings activate\n'$logDate >> $logFile && do_torbox_preassigned_settings ;;
-        7\ *) echo -e '\nUpdate\Update/Upgrade activate\n'$logDate >> $logFile && do_update && do_upgrade ;;
-        8\ *) echo -e '\nReboot Rock64 activate\n'$logDate >> $logFile && do_reboot ;;
-        9\ *) echo -e '\nDietPi Launcher Menu activate\n'$logDate >> $logFile && do_dietpi_launcher ;;
+        1\ *) echo -e $logDate"[ MENU ] Requirement Packages activate" >> $logFile && do_torbox_requirement_packages ;;
+        2\ *) echo -e $logDate"[ MENU ] TorBox Programs activate" >> $logFile && do_torbox_directories && do_torbox_programs ;;
+        3\ *) echo -e $logDate"[ MENU ] Maintenance Utilities activate" >> $logFile && do_torbox_maintenance_programs ;;
+        4\ *) echo -e $logDate"[ MENU ] Preassigned Settings activate" >> $logFile && do_torbox_preassigned_settings ;;
+        7\ *) echo -e $logDate"[ MENU ] Update\Update/Upgrade activate" >> $logFile && do_update && do_upgrade ;;
+        8\ *) echo -e $logDate"[ MENU ] Reboot Rock64 activate" >> $logFile && do_reboot ;;
+        9\ *) echo -e $logDate"[ MENU ] DietPi Launcher Menu activate" >> $logFile && do_dietpi_launcher ;;
         *) whiptail --msgbox "Programmer error: unrecognized option" 30 60 1 ;;
       esac || whiptail --msgbox "There was an error running option $menuOption" 30 60 1
     else
